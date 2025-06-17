@@ -25,6 +25,18 @@ async function fetchFishFeederData() {
   }
 }
 
+const doc = db.collection('fishFeeder')
+
+const observer = doc.onSnapshot(docSnapshot => {
+  console.log("📦 Collection snapshot received.");
+  docSnapshot.forEach(doc => {
+    console.log(`${doc.id} =>`, doc.data());
+  });
+
+}, err => {
+  console.log(`Encountered error: ${err}`);
+});
+
 app.get("/", (req, res) => {
   fetchFishFeederData()
     .then((data) => {
