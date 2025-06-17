@@ -5,7 +5,16 @@ const port = 3000;
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.status(200).json("Hello World!" + new Date().toISOString());
+  const cetTime = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Paris', // CET/CEST
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+  res.status(200).json("Hello World! " + cetTime);
 });
 
 app.listen(port, () => {
