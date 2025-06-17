@@ -1,23 +1,40 @@
 const express = require("express");
 const favicon = require("serve-favicon");
 const path = require("path");
+
+const { db } = require("./firebaseAdmin");
+
 const app = express();
 const port = 3000;
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 app.use(express.json());
 
+async function fetchFishFeederData() {
+  try {
+    const fishFeederCollection = db.collection("fishFeeder");
+    const snapshot = await fishFeederCollection.get();
+    const data = [];
+    snapshot.forEach((doc) => {
+      data.push({ id: doc.id, ...doc.data() });
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching fish feeder data:", error);
+    throw error;
+  }
+}
+
 app.get("/", (req, res) => {
-  const cetTime = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Europe/Paris', 
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(new Date());
-  res.status(200).json("Hello World! " + cetTime);
+  fetchFishFeederData()
+    .then((data) => {
+      console.log("Fish Feeder Data:", data);
+      res.status(200).json(data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      res.status(500).json({ error: 'Failed to fetch data' });
+    });
 });
 
 app.listen(port, () => {
