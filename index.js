@@ -5,7 +5,7 @@ const port = 3000;
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.status(200).json("Hello World!");
+  res.status(200).json("Hello World!" + new Date().toISOString());
 });
 
 app.listen(port, () => {
