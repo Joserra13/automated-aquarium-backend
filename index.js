@@ -1,7 +1,7 @@
 const express = require("express");
 const favicon = require("serve-favicon");
 const path = require("path");
-
+const apiKeyAuth = require('./middleware/apiKeyAuth');
 const { db } = require("./firebaseAdmin");
 
 const app = express();
@@ -9,6 +9,7 @@ const port = 3000;
 
 let data;
 
+app.use(apiKeyAuth)
 app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 app.use(express.json());
 
