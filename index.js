@@ -27,13 +27,13 @@ const doc = db.collection("fishFeeder");
 
 doc.onSnapshot(
   (docSnapshot) => {
-    // console.log("Collection snapshot received.");
+    console.log("\nCollection snapshot received.");
     docSnapshot.forEach((doc) => {
       // console.log(`${doc.id} =>`, doc.data());
       fishFeederData = doc.data();
 
       for (let [key, value] of Object.entries(doc.data())) {
-        // console.log(`${key}: ${value}`);
+        console.log(`${key}: ${value}`);
       }
     });
   },
@@ -43,7 +43,7 @@ doc.onSnapshot(
 );
 
 app.get("/fishFeeder", (req, res) => {
-  console.log("GET /fishFeeder");
+  console.log("GET /fishFeeder" + req.url);
   res.json(fishFeederData);
 });
 
