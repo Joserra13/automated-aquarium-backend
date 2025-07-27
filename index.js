@@ -58,7 +58,7 @@ const doc = db.collection("fishFeeder");
 doc.onSnapshot(
   (docSnapshot) => {
     console.log("\nCollection snapshot received.");
-    docSnapshot.forEach((doc) => {
+    docSnapshot.forEach(async (doc) => {
       // console.log(`${doc.id} =>`, doc.data());
       fishFeederData = doc.data();
 
@@ -70,7 +70,7 @@ doc.onSnapshot(
       Object.assign(fishFeederData, { timestamp: cetDate });
 
       // Write to MongoDB
-      writeMongoData(fishFeederData)
+      await writeMongoData(fishFeederData)
         .then(() => {
           console.log("Data written to MongoDB successfully.");
         })
