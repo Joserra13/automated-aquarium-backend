@@ -4,7 +4,8 @@ const path = require("path");
 const apiKeyAuth = require("./middleware/apiKeyAuth");
 const { db } = require("./firebaseAdmin");
 const { MongoClient, ServerApiVersion } = require("mongodb");
-process.loadEnvFile();
+import dotenv from 'dotenv';
+dotenv.config();
 
 const uri = `mongodb+srv://automatedaquariumiot:${process.env.MONGO_DB_PW}@automatedaquariumcluste.jk2ia54.mongodb.net/?retryWrites=true&w=majority&appName=AutomatedAquariumCluster`;
 
