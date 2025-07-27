@@ -3,6 +3,35 @@ const favicon = require("serve-favicon");
 const path = require("path");
 const apiKeyAuth = require("./middleware/apiKeyAuth");
 const { db } = require("./firebaseAdmin");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+process.loadEnvFile();
+
+const uri = `mongodb+srv://automatedaquariumiot:${process.env.MONGO_DB_PW}@automatedaquariumcluste.jk2ia54.mongodb.net/?retryWrites=true&w=majority&appName=AutomatedAquariumCluster`;
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
+const myColl = client.db("AutomatedAquarium").collection("FishFeeder");
+
+async function writeMongoData(data) {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("AutomatedAquarium").command({ ping: 1 });
+  
+    const result = await myColl.insertOne(data);
+    console.log(`A document was inserted with the _id: ${result.insertedId}`);
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
 
 const app = express();
 const port = 3000;
@@ -33,8 +62,20 @@ doc.onSnapshot(
       fishFeederData = doc.data();
 
       for (let [key, value] of Object.entries(doc.data())) {
-        console.log(`${key}: ${value}`);
+        // console.log(`${key}: ${value}`);
       }
+
+      const cetDate = new Date().toLocaleString("es-ES", { timeZone: "CET" });
+      Object.assign(fishFeederData, { timestamp: cetDate });
+
+      // Write to MongoDB
+      writeMongoData(fishFeederData)
+        .then(() => {
+          console.log("Data written to MongoDB successfully.");
+        })
+        .catch((error) => {
+          console.error("Error writing data to MongoDB:", error);
+        });
     });
   },
   (err) => {
