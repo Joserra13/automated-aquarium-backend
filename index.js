@@ -85,12 +85,12 @@ doc.onSnapshot(
 );
 
 app.get("/fishFeeder", (req, res) => {
-  console.log("GET /fishFeeder" + req.url);
+  console.log("GET " + req.url);
   res.json(fishFeederData);
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`Automated Aquarium backend listening at http://localhost:${port}`);
 });
 
 module.exports = app; // Export the app for testing purposes
