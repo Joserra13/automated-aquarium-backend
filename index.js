@@ -47,6 +47,7 @@ let fishFeederData = {
   schedule1: "00:00",
   count: 0,
   waterTemperature: 0.00,
+  timestamp: new Date()
 };
 
 app.use(apiKeyAuth);
@@ -67,7 +68,7 @@ doc.onSnapshot(
       }
 
       const cetDate = new Date().toLocaleString("es-ES", { timeZone: "CET" });
-      Object.assign(fishFeederData, { timestamp: cetDate });
+      fishFeederData.timestamp = cetDate;
 
       // Write to MongoDB
       await writeMongoData(fishFeederData)
