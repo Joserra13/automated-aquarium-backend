@@ -38,15 +38,15 @@ const app = express();
 const port = 3000;
 
 let fishFeederData = {
-  schedule0Enabled: true,
+  schedule0Enabled: false,
   feednow: false,
   schedule2Enabled: false,
   schedule2: "00:00",
   schedule1Enabled: false,
-  schedule0: "15:48",
+  schedule0: "00:00",
   schedule1: "00:00",
-  count: 13,
-  waterTemperature: 13.62842,
+  count: 0,
+  waterTemperature: 0.00,
 };
 
 app.use(apiKeyAuth);
